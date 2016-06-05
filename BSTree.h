@@ -1,0 +1,504 @@
+#ifndef BSTREE_H
+#define BSTREE_H
+
+#include <stdexcept>
+#include <algorithm>
+#include <iostream>
+
+
+class duplicated_value : public std::runtime_error{
+public:
+	/**
+		Secondary constructor with error message
+
+		@param message error message
+	*/
+	duplicated_value(const char *message) : std::runtime_error(message){}
+};
+
+class value_not_found : public std::runtime_error {
+public:
+	/**
+		Costruttore secondario che prende un messaggio
+
+		@param msg messaggio dell'errore
+	*/
+	value_not_found(const char *msg) : std::runtime_error(msg) {}	
+};
+
+
+
+template <typename T, typename compequalsT, typename complessT>
+class bstree{
+
+	struct node{
+		T value; ///< value of the node
+		node *left; ///< pointer to the left child node of the node
+		node *right; ///< pointer to the right child node of the node
+		node *father;///< pointer to the node father or the node
+
+		/**
+			Constructor for node given its value
+		
+			@param v value of the node
+		*/
+		node(const T &v) : value(v), left(0), right(0), father(0){}
+
+		/**
+			Constructor for node given its value, its left child and right child
+		
+			@param v value of the node
+			@param l left child
+			@param r right child
+		*/
+		node(node *l, const T &v, node *r) : value(v), left(l), right(r), father(0){}
+		/**
+			Constructor for node given its value and left child
+		
+			@param v value of the node
+			@param l left child
+		*/
+		node(node *l, const T &v) : value(v), left(l), right(0), father(0){}
+		/**
+			Constructor for node given its value and its righ child
+		
+			@param v value of the node
+			@param r right child
+		*/
+		node(const T &v, node *r) : value(v), left(0), right(r), father(0){}
+		/**
+			Default constructor
+		*/
+		node() : left(0),right(0), father(0){}
+		/**
+			Destructor
+		*/
+		~node() {}
+
+		/**
+			Copy constructor	
+			@param other node to copy
+		*/
+		node(const node &other) : value(other.value), left(other.left), right(other.right) {}
+
+		/**
+			Assignement operator 	
+			@param other node to copy
+		*/
+		node &operator=(const node &other) {
+			if( this!=&other) {
+				value = other.value;
+				left = other.left;
+				right = other.right;
+			}
+			return *this;
+		}
+	};
+
+
+	node *_root;
+	int _size;
+
+
+
+	/**
+		Auxiliary method which returns the pointer to the node with the given value
+
+		@param val value to look for
+		@return the pointer to the node if it exists, otherwise 0
+	*/
+	node *find_helper(const T val) const {
+		node *curr = _root;
+		compequalsT comp_e;
+		complessT comp_l;
+
+		while(curr != 0){
+			if(comp_e(curr->value, val)){
+				return curr;
+			}else{
+				// if the current visited node value is less than the given value
+				if(comp_l(curr->value, val)){
+					curr = curr->right;
+				}else{
+					curr = curr->left;
+				}
+			}
+		}
+		return 0;
+	}
+
+		/**
+		Return the node successor
+		@param n node
+		@return the successor of n
+	*/
+	const node *succ(const node *n){
+		if(n->right != 0){
+			return min(n->right);
+		}
+		while(n->father != 0 && n == n->father->right){
+			n = n->father;
+		}
+		return n->father;
+	}
+
+	/**
+		Return the node with the minimum value in the subtree of the given node
+		@param n node
+		@return the node with minimum value
+	*/
+	const node* min(const node *n){
+		while(n->left != 0){
+			n = n->left;
+		}
+		return n;
+	}
+
+	public:
+	
+	/**
+		Default constructor
+	*/
+	bstree() : _root(0), _size(0){}
+
+	/**
+		Destructor
+	*/
+	~bstree() {
+		//clear();
+	}
+	/**
+		Copy constructor
+		
+		@param other tree to copy
+	*/
+	bstree(const bstree& other) : _root(0), _size(0){
+		typename bstree<T, compequalsT, complessT>::const_iterator i, ie;
+		i = other.begin(); 
+		ie = other.end();
+		try {
+			while (i != ie) {
+				add(*i);
+				++i;
+			}
+		}
+		catch(...) {
+			//clear();
+			throw;
+		}
+	}
+
+	/**
+		Assignement operator
+		
+		@param other tree to copy
+		@return *this
+	*/
+	bstree& operator=(const bstree &other) {
+		if (this!=&other) {
+			bstree temp(other);
+			std::swap(this->_root,temp._root);
+			std::swap(this->_size,temp._size);			
+		}
+		
+		return *this;
+
+	}
+
+	/**
+		Checks if the given value is present in the tree
+
+		@param value to check existence
+		@return true or false whether the value exists or not.
+	*/
+	bool check(const T &val) const {
+		node *n = find_helper(val);
+		
+		return (n != 0);
+	}
+
+/*	
+		Return the value searched if exist.
+
+		@param key chiave da cercare
+		@return il valore associato alla chiave
+		@throw key_not_found nel caso in cui la chiave non esiste		
+	
+	T &find(const T &val) {
+		
+		node *n = find_helper(val);
+		
+		if (n != 0){
+			return n->value;
+		} else{
+			throw value_not_found("Value not found.");
+		}
+		
+	}		*/
+
+
+	/**
+		Inserts new value in the tree
+
+		@param val value to insert
+	*/
+	void add(const T &val){
+		if(_size == 0){
+			//node new_node(val);
+			_root = new node(val);
+			_size = _size + 1;
+		}else{
+		
+			if(find_helper(val) == 0){
+				bool found = 0;
+				complessT comp_l;
+				node *curr = _root;
+
+				while(found == 0){	
+					// if the current visited node is less than the given node
+					if(comp_l(curr->value, val)){
+						if(curr->right == 0){
+							curr->right = new node(val);
+							curr->right->father = curr;
+							_size = _size + 1;
+							found = 1;
+						}else{
+							curr = curr->right;
+						}
+					}else{
+						if(curr->left == 0){
+							curr->left = new node(val);
+							curr->left->father = curr;
+							_size = _size + 1;
+							found = 1;
+						}
+						curr = curr -> left;
+					}				
+				}
+			}else{
+				throw duplicated_value("Already existing value.");
+			}
+		}
+	}
+
+
+	void delete_node(const T &val){
+		node *d = find_helper(val);  
+		if(d->left == 0 && d->right == 0){
+			if(d->father->left == d){
+				d->father->left = 0;
+			}else{
+				d->father->right = 0;
+			}
+			d->value = 0;
+		delete d;			
+		}
+		if(d->left == 0 && d->right != 0){
+			if(d->father->left == d){
+				d->father->left = d->right;
+			}else{
+				d->father->right = d->right;
+			}
+			d->value = 0;
+		delete d;			
+		}
+		if(d->left != 0 && d->right == 0){
+			if(d->father->left == d){
+				d->father->left = d->left;
+			}else{
+				d->father->right = d->left;
+			}
+			d->value = 0;
+			delete d;			
+		}
+		else{
+			node* succ = succ(d);
+			d->value = succ->value;
+			succ->value = 0;
+			delete succ;
+		}
+		
+	}
+
+
+
+	/**
+		Return the number of nodes of the tree
+		@return the number of nodes od the tree
+	*/
+	int get_size()  const {
+		return _size;
+	}
+
+
+	/**
+	 * Forward iterator read only
+	 */
+	class const_iterator{
+		const node *n;///<Pointer to the current node of the tree
+
+		friend class bstree;
+
+		/**
+			Secondary constructor
+			@param pn pointer to a node of the tree
+		*/
+		const_iterator(const node *pn){
+			n = pn;
+		}
+
+	public:
+		typedef std::forward_iterator_tag iterator_category;
+		/**
+			Default constructor
+		*/
+		const_iterator(){
+			n = 0;
+		}
+
+		/**
+			Copy constructor
+		*/
+		const_iterator(const const_iterator &other){
+			n = other.n;
+		}
+
+		/**
+			Assignement operator
+			@param other iterator to copy
+			@return *this
+		 */
+		const_iterator &operator=(const const_iterator &other){
+			n = other.n;
+			return *this;
+		}
+
+		/** 
+			Destructor
+		*/
+		~const_iterator(){}
+
+		/**
+		Dereference through reference
+		@return constant reference to node
+		*/
+		const T& operator*() const{
+			return n->value;
+		}
+
+		/**
+		Dereference through pointer
+		@return constant pointer to node
+		*/
+		const T* operator->() const{
+			return &(n->value);
+		}
+
+		/**Post-increment
+		@return the iterator to the previous node
+		*/
+		const_iterator operator++(int){
+			const_iterator tmp(*this);
+
+			if(n->left != 0){
+				n = n->left;
+				return tmp;
+			}
+
+			if(n->right != 0){
+				n = n->right;
+				return tmp;
+			}
+			while(n->father != 0){		
+				if(n->father->right != 0 && n->father->right != n){
+					n = n->father->right;
+					return tmp;
+				}
+				n = n->father;
+			}
+			n = 0;
+			return tmp;
+		}
+
+		/**Pre-increment
+		@return the iterator to the following node
+		*/
+		const_iterator& operator++(){
+			if(n->left != 0){
+				n = n->left;
+				return *this;
+			}
+
+			if(n->right != 0){
+				n = n->right;
+				return *this;
+			}
+			while(n->father != 0){		
+				if(n->father->right != 0 && n->father->right != n){
+					n = n->father->right;
+					return *this;
+				}
+				n = n->father;
+			}
+			n = 0;
+			return *this;
+		}
+
+		/**
+			Compare (equals)
+			@other iterator to compare
+			@return true if both pointers point to the same position
+		 */
+		bool operator==(const const_iterator &other) const{
+			return n == other.n;
+		}
+
+		/**
+			Compare (not equals)
+			@other iterator to compare
+			@return false if both pointers point to the same position
+		*/
+		bool operator!=(const const_iterator &other) const{
+			return n != other.n;
+		}
+	};//end class const_iterator
+
+	/**
+	 * Iterator of begin tree
+	 * @return the iterator of begin tree
+	 */
+	 const_iterator begin() const{
+	 	return const_iterator(_root);
+	 }
+
+	 /**
+	 * Iterator of end tree
+	 * @return the iterator at the end of the tree
+	 */
+	 const_iterator end() const{
+	 	return const_iterator(0);
+	 }
+
+	 
+
+};//end class bstree
+
+/**
+	Output streamm operator to print a bstree
+	@param os output stream
+	@param tree bstree to print
+	@return the output stream
+*/
+template <typename T, typename compequalsT, typename complessT>
+std::ostream& operator<<(std::ostream &os, const bstree<T,compequalsT, complessT> &tree) {
+		typename bstree<T, compequalsT, complessT>::const_iterator i, ie;
+
+		for(i = tree.begin(), ie = tree.end() ; i != ie; ++i){
+			os << *i << std::endl;
+		}
+
+		return os;
+	}
+
+
+#endif
