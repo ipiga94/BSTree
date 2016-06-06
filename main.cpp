@@ -86,6 +86,8 @@ void test_2(){
 
 	//delete a node leaf of the bstree test
 	to_assign.delete_node(7);
+
+
 	std::cout << "test of the deletion of value (7)" << std::endl << to_assign;
 
 	//test of get minimum
@@ -101,10 +103,20 @@ void test_2(){
 
 	std::cout << "another tree instantiation" << std::endl << another_tree;
 
-	const bstree<int, compare_int_e, compare_int_l>::node *n; 
+	/*const bstree<int, compare_int_e, compare_int_l>::node *n; 
 	n = another_tree.find_helper(13);
 
-	std::cout << "successore: " << another_tree.succ(n);
+	std::cout << "successore: " << another_tree.succ(n);*/
+
+	another_tree.delete_node(12);
+
+	std::cout << "after deletion of (12)" << std::endl << another_tree;
+
+	//test of clear bstree
+	another_tree.clear();
+
+	std::cout << "after clear of another_tree" << std::endl << another_tree;
+
 
 }
 

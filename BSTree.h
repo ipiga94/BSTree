@@ -132,7 +132,7 @@ class bstree{
 		@param n node
 		@return the successor of n
 	*/
-	const node *succ(const node *n){
+	node *successor(node *n){
 		if(n->right != 0){
 			return min(n->right);
 		}
@@ -147,7 +147,7 @@ class bstree{
 		@param n node
 		@return the node with minimum value
 	*/
-	const node* min(const node *n){
+	node* min(node *n){
 		while(n->left != 0){
 			n = n->left;
 		}
@@ -167,6 +167,46 @@ class bstree{
 	~bstree() {
 		//clear();
 	}
+
+	/**
+		Method to empty the bstree
+	*/
+	void clear() {
+		node *n = _root;
+		node *temp = 0;
+
+		while(n != 0){
+			if(n->left != 0){
+				std::cout << "left" << std::endl;
+				n = n->left;
+			}else if(n->right != 0){
+				std::cout << "right" << std::endl;
+				n = n->right;
+			}else if(n->left == 0 && n->right == 0){
+				std::cout << "to delete" << std::endl;
+				if(n->father == 0){
+					std::cout << "value: " << n;
+					delete n; 
+					n = 0;
+				}else{
+					temp = n->father;
+					if(temp->left == n){
+						temp->left = 0;
+					}else{
+						temp->right = 0;
+					}
+
+					delete n;
+					n = temp;
+				}
+				
+			}
+		}
+
+		std::cout << "root: " << _root;
+
+	}
+
 	/**
 		Copy constructor
 		
@@ -291,18 +331,18 @@ class bstree{
 				d->father->right = 0;
 			}
 			d->value = 0;
-		delete d;			
+			delete d;			
 		}
-		if(d->left == 0 && d->right != 0){
+		else if(d->left == 0 && d->right != 0){
 			if(d->father->left == d){
 				d->father->left = d->right;
 			}else{
 				d->father->right = d->right;
 			}
 			d->value = 0;
-		delete d;			
+			delete d;			
 		}
-		if(d->left != 0 && d->right == 0){
+		else if(d->left != 0 && d->right == 0){
 			if(d->father->left == d){
 				d->father->left = d->left;
 			}else{
@@ -312,8 +352,13 @@ class bstree{
 			delete d;			
 		}
 		else{
-			node* succ = succ(d);
+			node* succ = successor(d);
 			d->value = succ->value;
+			if(succ->father->left == d){
+				succ->father->left = succ->left;
+			}else{
+				succ->father->right = succ->left;
+			}
 			succ->value = 0;
 			delete succ;
 		}
@@ -335,9 +380,12 @@ class bstree{
 	 * Forward iterator read only
 	 */
 	class const_iterator{
-		const node *n;///<Pointer to the current node of the tree
 
 		friend class bstree;
+
+		const node *n;///<Pointer to the current node of the tree
+
+		
 
 		/**
 			Secondary constructor
