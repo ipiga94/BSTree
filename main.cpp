@@ -113,9 +113,17 @@ void test_2(){
 	std::cout << "after deletion of (12)" << std::endl << another_tree;
 
 	//test of clear bstree
-	another_tree.clear();
+	//delete &another_tree;
 
 	std::cout << "after clear of another_tree" << std::endl << another_tree;
+
+	//test of subtree
+	bstree<int, compare_int_e, compare_int_l> sub = subtree(another_tree, 8); 
+	std::cout << "stampo" << std::endl << sub << std::endl;
+
+	//test of is_leaf
+	std::cout << another_tree.is_leaf(9) << std::endl;
+	std::cout << another_tree.is_leaf(10) << std::endl;
 
 
 }

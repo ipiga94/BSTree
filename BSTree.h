@@ -16,17 +16,6 @@ public:
 	duplicated_value(const char *message) : std::runtime_error(message){}
 };
 
-class value_not_found : public std::runtime_error {
-public:
-	/**
-		Costruttore secondario che prende un messaggio
-
-		@param msg messaggio dell'errore
-	*/
-	value_not_found(const char *msg) : std::runtime_error(msg) {}	
-};
-
-
 
 template <typename T, typename compequalsT, typename complessT>
 class bstree{
@@ -165,28 +154,29 @@ class bstree{
 		Destructor
 	*/
 	~bstree() {
-		//clear();
+		clear();
 	}
 
 	/**
 		Method to empty the bstree
 	*/
 	void clear() {
+		std::cout << "sro effettuando la clear" << std::endl;
 		node *n = _root;
 		node *temp = 0;
 
 		while(n != 0){
 			if(n->left != 0){
-				std::cout << "left" << std::endl;
+				//std::cout << "left" << std::endl;
 				n = n->left;
 			}else if(n->right != 0){
-				std::cout << "right" << std::endl;
+				//std::cout << "right" << std::endl;
 				n = n->right;
 			}else if(n->left == 0 && n->right == 0){
-				std::cout << "to delete" << std::endl;
-				if(n->father == 0){
-					std::cout << "value: " << n;
-					delete n; 
+				//std::cout << "to delete" << std::endl;
+				if(n->father == 0){	
+				//limit case when n points to the root				
+					delete n; 					
 					n = 0;
 				}else{
 					temp = n->father;
@@ -203,8 +193,7 @@ class bstree{
 			}
 		}
 
-		std::cout << "root: " << _root;
-
+		//_root = 0;
 	}
 
 	/**
@@ -257,31 +246,6 @@ class bstree{
 		return (n != 0);
 	}
 
-/*	
-		Return the value searched if exist.
-
-		@param key chiave da cercare
-		@return il valore associato alla chiave
-		@throw key_not_found nel caso in cui la chiave non esiste		
-	
-	T &find(const T &val) {
-		
-		node *n = find_helper(val);
-		
-		if (n != 0){
-			return n->value;
-		} else{
-			throw value_not_found("Value not found.");
-		}
-		
-	}		*/
-
-
-	/**
-		Inserts new value in the tree
-
-		@param val value to insert
-	*/
 	void add(const T &val){
 		if(_size == 0){
 			//node new_node(val);
@@ -331,7 +295,8 @@ class bstree{
 				d->father->right = 0;
 			}
 			d->value = 0;
-			delete d;			
+			delete d;
+			std::cout << "deleted node: " << d << " value: " << d->value << std::endl;			
 		}
 		else if(d->left == 0 && d->right != 0){
 			if(d->father->left == d){
@@ -349,7 +314,8 @@ class bstree{
 				d->father->right = d->left;
 			}
 			d->value = 0;
-			delete d;			
+			delete d;
+			std::cout << "deleted node: " << d << " value: " << d->value << std::endl;			
 		}
 		else{
 			node* succ = successor(d);
@@ -361,10 +327,18 @@ class bstree{
 			}
 			succ->value = 0;
 			delete succ;
+			std::cout << "deleted node: " << succ << " value: " << succ->value << std::endl;
 		}
 		
 	}
 
+	bool is_leaf(const T &val) const{
+		node *temp = find_helper(val);
+		if(temp->right == 0 && temp->left == 0){
+			return 1;
+		}
+		return 0;
+	}
 
 
 	/**
@@ -438,9 +412,9 @@ class bstree{
 		Dereference through pointer
 		@return constant pointer to node
 		*/
-		const T* operator->() const{
+		/*const T* operator->() const{
 			return &(n->value);
-		}
+		}*/
 
 		/**Post-increment
 		@return the iterator to the previous node
@@ -531,8 +505,52 @@ class bstree{
 
 };//end class bstree
 
+
 /**
-	Output streamm operator to print a bstree
+	Extract the subtree from the given tree from the node with the given value
+	@param t the tree to extract from
+	@param val the starting value
+	@return the extracted subtree
+*/
+template <typename T, typename compequalsT, typename complessT>
+bstree<T,compequalsT, complessT> subtree(const bstree<T,compequalsT, complessT> &t,const T &val){
+
+		if(t.check(val)){
+			std::cout << "entro" << std::endl;
+			bstree<T,compequalsT, complessT> sub;		
+			typename bstree<T, compequalsT, complessT>::const_iterator i, ie;
+
+			i = t.begin();
+			ie = t.end();
+
+			while(*i != val){
+				++i;
+			}
+
+			if(!t.is_leaf(*i)){
+				bool exit = 0;
+				while(i != ie && exit != 1){
+					sub.add(*i);
+					++i;
+					if(t.is_leaf(*i)){//bisogna capire quando ha finito il sottoalbero
+						exit = 1;
+					}
+				}
+			}
+			
+
+			return sub;
+
+		}else{
+			throw duplicated_value("Already existing value.");
+		}
+
+	}
+
+
+
+/**
+	Output stream operator to print a bstree
 	@param os output stream
 	@param tree bstree to print
 	@return the output stream
