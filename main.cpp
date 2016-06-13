@@ -117,9 +117,45 @@ void test_2(){
 
 	std::cout << "after clear of another_tree" << std::endl << another_tree;
 
+	std::cout << "test of subtree" << std::endl;
 	//test of subtree
-	bstree<int, compare_int_e, compare_int_l> sub = subtree(another_tree, 8); 
-	std::cout << "stampo" << std::endl << sub << std::endl;
+	bstree<int, compare_int_e, compare_int_l> subtree_test;
+
+	subtree_test.add(13);
+	subtree_test.add(9);
+	subtree_test.add(12);
+	subtree_test.add(5);
+	subtree_test.add(10);
+	subtree_test.add(11);
+	subtree_test.add(4);
+	subtree_test.add(15);
+	subtree_test.add(14);
+	subtree_test.add(16);
+
+
+	
+	std::cout << "stampa di subtree_test: " << std::endl << subtree_test << std::endl;
+
+	bstree<int, compare_int_e, compare_int_l> sub = subtree(subtree_test, 10); 
+	std::cout << "stampo subtree " << std::endl << sub << std::endl;
+
+	sub = subtree(subtree_test, 12); 
+	std::cout << "stampo subtree " << std::endl << sub << std::endl;
+	
+	sub = subtree(subtree_test, 15); 
+	std::cout << "stampo subtree " << std::endl << sub << std::endl;
+
+	sub = subtree(subtree_test, 11); 
+	std::cout << "stampo subtree " << std::endl << sub << std::endl;
+
+	sub = subtree(subtree_test, 13); 
+	std::cout << "stampo subtree " << std::endl << sub << std::endl;
+
+	sub = subtree(subtree_test, 9); 
+	std::cout << "stampo subtree " << std::endl << sub << std::endl;
+
+	sub = subtree(subtree_test, 0); 
+	std::cout << "stampo subtree " << std::endl << sub << std::endl;
 
 	//test of is_leaf
 	std::cout << another_tree.is_leaf(9) << std::endl;

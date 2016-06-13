@@ -6,6 +6,16 @@
 #include <iostream>
 
 
+class non_existent_value : public std::runtime_error{
+public:
+	/**
+		Secondary constructor with error message
+
+		@param message error message
+	*/
+	non_existent_value(const char *message) : std::runtime_error(message){}
+};
+
 class duplicated_value : public std::runtime_error{
 public:
 	/**
@@ -123,7 +133,7 @@ class bstree{
 	*/
 	node *successor(node *n){
 		if(n->right != 0){
-			return min(n->right);
+			return min_value(n->right);
 		}
 		while(n->father != 0 && n == n->father->right){
 			n = n->father;
@@ -131,14 +141,27 @@ class bstree{
 		return n->father;
 	}
 
+
 	/**
 		Return the node with the minimum value in the subtree of the given node
 		@param n node
 		@return the node with minimum value
 	*/
-	node* min(node *n){
+	node* min_value(node *n) const{
 		while(n->left != 0){
 			n = n->left;
+		}
+		return n;
+	}
+
+		/**
+		Return the node with the maximum value in the subtree of the given node
+		@param n node
+		@return the node with maximum value
+	*/
+	node* max_value(node *n) const{
+		while(n->right != 0){
+			n = n->right;
 		}
 		return n;
 	}
@@ -161,7 +184,6 @@ class bstree{
 		Method to empty the bstree
 	*/
 	void clear() {
-		std::cout << "sro effettuando la clear" << std::endl;
 		node *n = _root;
 		node *temp = 0;
 
@@ -338,6 +360,23 @@ class bstree{
 			return 1;
 		}
 		return 0;
+	}
+
+	bool is_in_subtree(const T &subroot_value, const T &val) const{
+		node *subroot = find_helper(subroot_value);
+		node * min = min_value(subroot);
+		node * max = max_value(subroot);
+		T min_val = min->value;
+		std::cout << "min: " << min_val << std::endl;
+		T max_val = max->value;
+		std::cout << "max: " << max_val << std::endl;
+			if(val > subroot_value && val <= max_val){
+				return 1;
+			}else if(val < subroot_value && val >= min_val){
+				return 1;
+			}else{
+				return 0;
+			}
 	}
 
 
@@ -527,22 +566,27 @@ bstree<T,compequalsT, complessT> subtree(const bstree<T,compequalsT, complessT> 
 				++i;
 			}
 
-			if(!t.is_leaf(*i)){
-				bool exit = 0;
-				while(i != ie && exit != 1){
+ 			const T subroot_value = *i;
+ 			sub.add(*i);
+ 			++i;
+
+ 			std::cout << "is leaf?: " << t.is_leaf(*i) << std::endl;
+ 			std::cout << "is in subtree?: " << t.is_in_subtree(subroot_value, *i) << std::endl;
+
+ 			bool exit = 0;
+			do{
+				if(t.is_in_subtree(subroot_value, *i)){
 					sub.add(*i);
 					++i;
-					if(t.is_leaf(*i)){//bisogna capire quando ha finito il sottoalbero
-						exit = 1;
-					}
+				}else{
+					exit = 1;
 				}
-			}
-			
+			}while(i != ie && !exit);
 
 			return sub;
 
 		}else{
-			throw duplicated_value("Already existing value.");
+			throw non_existent_value("The value inserted is not valid because it doesn't exist");
 		}
 
 	}
