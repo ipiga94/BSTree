@@ -582,7 +582,6 @@ template <typename T, typename compequalsT, typename complessT>
 bstree<T,compequalsT, complessT> subtree(const bstree<T,compequalsT, complessT> &t,const T &val){
 
 		if(t.check(val)){
-			std::cout << "entro" << std::endl;
 			bstree<T,compequalsT, complessT> sub;		
 			typename bstree<T, compequalsT, complessT>::const_iterator i, ie;
 
@@ -594,22 +593,21 @@ bstree<T,compequalsT, complessT> subtree(const bstree<T,compequalsT, complessT> 
 			}
 
  			const T subroot_value = *i;
- 			sub.add(*i);
- 			++i;
+ 			sub.add(subroot_value);
 
- 			std::cout << "is leaf?: " << t.is_leaf(*i) << std::endl;
- 			std::cout << "is in subtree?: " << t.is_in_subtree(subroot_value, *i) << std::endl;
-
- 			bool exit = 0;
-			do{
-				if(t.is_in_subtree(subroot_value, *i)){
-					sub.add(*i);
-					++i;
-				}else{
-					exit = 1;
-				}
-			}while(i != ie && !exit);
-
+ 			if(!t.is_leaf(subroot_value)){
+	 			++i;
+	 			
+	 			bool exit = 0;
+				do{
+					if(t.is_in_subtree(subroot_value, *i)){
+						sub.add(*i);
+						++i;
+					}else{
+						exit = 1;
+					}
+				}while(i != ie && !exit);
+			}
 			return sub;
 
 		}else{

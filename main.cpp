@@ -49,6 +49,11 @@ void test_1(){
 	 sapo_tree.check(3);
 	 std::cout << sapo_tree << std::endl;
 
+	 bstree<int, compare_int_e, compare_int_l> sub;
+	 sub = subtree(sapo_tree, 4);
+
+	 std::cout << "subtree: " << std::endl << sub << std::endl;
+
 	 bstree<int, compare_int_e, compare_int_l> badass_tree;
 
 	 std::cout << "badass" << std::endl << badass_tree << std::endl;
@@ -81,8 +86,7 @@ void test_1(){
 
 
 
-	 //bstree<int, compare_int_e, compare_int_l> sub;
-	 //sub = subtree(sapo_tree, 4);
+	 
 
 
 		
