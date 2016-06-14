@@ -14,20 +14,81 @@ struct compare_int_l {
 	}
 };
 
+
+
 void test_1(){
 
-	bstree<int, compare_int_e, compare_int_l> tree;
-	//bstree<int, compare_int_e, compare_int_l>::node nodo; 
-	//nodo = bstree<int, compare_int_e, compare_int_l>::node(5);
+	 bstree<int, compare_int_e, compare_int_l> sapo_tree;
+
+	 std::cout << sapo_tree;
+
+	 try{
+	 	
+	 	sapo_tree.add(3);
+	 	sapo_tree.add(4);
+	 	sapo_tree.add(5);
+	 	sapo_tree.add(-1);
+	 	sapo_tree.add(3*5);
+	 	std::cout << sapo_tree << std::endl;
+
 	 
-	//node node_2;
-	//node node_3;
 
-	/*node_1 = new bstree::node(3);
-	node_2 = new bstree::node(node_1, 2);
-	node_3 = new bstree::node(node_1, 1, node_2);*/
+	 } catch (...) {
 
-	//std::cout << "node_3.value: " << nodo.value << " node_3.left: " << nodo.left << " node_3.right: " << nodo.right << std::endl; 
+	 	std::cout << "presa eccezione" << std::endl;
+	}
+
+
+
+	 std::cout << sapo_tree.get_size() << std::endl;
+
+	 std::cout << sapo_tree << std::endl;
+	 sapo_tree.delete_node(3);
+	 std::cout << sapo_tree << std::endl;
+
+	 sapo_tree.check(3);
+	 std::cout << sapo_tree << std::endl;
+
+	 bstree<int, compare_int_e, compare_int_l> badass_tree;
+
+	 std::cout << "badass" << std::endl << badass_tree << std::endl;
+
+	 badass_tree.add(3);
+	 badass_tree.add(2);
+	 badass_tree.add(1);
+
+	 std::cout << "badass" << std::endl << badass_tree << std::endl;
+
+	 badass_tree.delete_node(3);
+
+	 std::cout << "badass" << std::endl << badass_tree << std::endl;
+
+	 bstree<int, compare_int_e, compare_int_l> badass2_tree;
+
+	 std::cout << "badass2" << std::endl << badass2_tree << std::endl;
+
+	 badass2_tree.add(5);
+	 badass2_tree.add(2);
+	 badass2_tree.add(1);
+	 badass2_tree.add(3);
+	 badass2_tree.add(4);
+
+	 std::cout << "badass2" << std::endl << badass2_tree << std::endl;
+
+	 badass2_tree.delete_node(3);
+
+	 std::cout << "badass2" << std::endl << badass2_tree << std::endl;
+
+
+
+	 //bstree<int, compare_int_e, compare_int_l> sub;
+	 //sub = subtree(sapo_tree, 4);
+
+
+		
+
+
+	
 }
 
 void test_2(){
@@ -103,14 +164,28 @@ void test_2(){
 
 	std::cout << "another tree instantiation" << std::endl << another_tree;
 
-	/*const bstree<int, compare_int_e, compare_int_l>::node *n; 
-	n = another_tree.find_helper(13);
+	//test deletion
 
-	std::cout << "successore: " << another_tree.succ(n);*/
+	bstree<int, compare_int_e, compare_int_l> deletion_tree;
+
+	deletion_tree.add(50);
+	deletion_tree.add(30);
+	deletion_tree.add(40);
+	deletion_tree.add(60);
+	deletion_tree.add(70);
+	deletion_tree.add(20);
+	deletion_tree.add(90);
+	deletion_tree.add(550);
+	deletion_tree.add(35);
+	deletion_tree.add(37);
+
+	deletion_tree.delete_node(30);
+
+	std::cout << "after deletion of (30) from deletion_tree " << std::endl << deletion_tree;
 
 	another_tree.delete_node(12);
 
-	std::cout << "after deletion of (12)" << std::endl << another_tree;
+	std::cout << "after deletion of (12) from another_tree" << std::endl << another_tree;
 
 	//test of clear bstree
 	//delete &another_tree;
@@ -154,8 +229,8 @@ void test_2(){
 	sub = subtree(subtree_test, 9); 
 	std::cout << "stampo subtree " << std::endl << sub << std::endl;
 
-	sub = subtree(subtree_test, 0); 
-	std::cout << "stampo subtree " << std::endl << sub << std::endl;
+	//sub = subtree(subtree_test, 0); 
+	//std::cout << "stampo subtree " << std::endl << sub << std::endl;
 
 	//test of is_leaf
 	std::cout << another_tree.is_leaf(9) << std::endl;
@@ -166,8 +241,8 @@ void test_2(){
 
 
 int main(){
-    //test_1();
-    test_2();
+    test_1();
+    //test_2();
 
 	return 0;
 }

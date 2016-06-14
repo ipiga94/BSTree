@@ -309,47 +309,74 @@ class bstree{
 
 
 	void delete_node(const T &val){
-		node *d = find_helper(val);  
-		if(d->left == 0 && d->right == 0){
-			if(d->father->left == d){
-				d->father->left = 0;
-			}else{
-				d->father->right = 0;
+		if(check(val)){
+			node *d = find_helper(val); 
+			if(d->left == 0 && d->right == 0){
+				if(d->father != 0 && d->father->left == d){
+					d->father->left = 0;
+				}else if(d->father != 0 && d->father->right == d){
+					d->father->right = 0;
+				}
+				d->value = 0;
+				delete d;
+				std::cout << "deleted node: " << d << " value: " << d->value << std::endl;			
 			}
-			d->value = 0;
-			delete d;
-			std::cout << "deleted node: " << d << " value: " << d->value << std::endl;			
-		}
-		else if(d->left == 0 && d->right != 0){
-			if(d->father->left == d){
-				d->father->left = d->right;
-			}else{
-				d->father->right = d->right;
+			else if(d->left == 0 && d->right != 0){
+				if(d->father == 0){
+					d->right->father = 0;
+					_root = d->right;
+				}else if(d->father->left == d){
+					d->father->left = d->right;
+				}else{
+					d->father->right = d->right;
+				}
+
+				if(d->right != 0){
+					d->right->father = d->father;
+				}
+
+				d->value = 0;
+				d->right = 0;
+				delete d;			
 			}
-			d->value = 0;
-			delete d;			
-		}
-		else if(d->left != 0 && d->right == 0){
-			if(d->father->left == d){
-				d->father->left = d->left;
-			}else{
-				d->father->right = d->left;
+			else if(d->left != 0 && d->right == 0){
+				if(d->father == 0){
+					d->left->father = 0;
+					_root = d->left;
+				}else if(d->father->left == d){
+					d->father->left = d->left;
+
+				}else{
+					d->father->right = d->left;
+				}
+
+				if(d->left != 0){
+					d->left->father = d->father;
+				}
+
+				d->value = 0;
+				d->left = 0;
+				delete d;
+				std::cout << "deleted node: " << d << " value: " << d->value << std::endl;			
 			}
-			d->value = 0;
-			delete d;
-			std::cout << "deleted node: " << d << " value: " << d->value << std::endl;			
-		}
-		else{
-			node* succ = successor(d);
-			d->value = succ->value;
-			if(succ->father->left == d){
-				succ->father->left = succ->left;
-			}else{
-				succ->father->right = succ->left;
+			else{
+				node* succ = successor(d);
+				d->value = succ->value;
+				if(succ->father->left == succ){
+					succ->father->left = succ->right;
+					succ->right->father = succ->father;
+				}else{
+					succ->father->right = succ->right;
+					succ->right->father = succ->father;
+				}
+				succ->value = 0;
+				succ->left = 0;
+				succ->right = 0;
+				delete succ;
+				std::cout << "deleted node: " << succ << " value: " << succ->value << std::endl;
 			}
-			succ->value = 0;
-			delete succ;
-			std::cout << "deleted node: " << succ << " value: " << succ->value << std::endl;
+		}else{
+			throw non_existent_value("The value inserted is not valid because it doesn't exist");
 		}
 		
 	}
@@ -602,6 +629,11 @@ bstree<T,compequalsT, complessT> subtree(const bstree<T,compequalsT, complessT> 
 template <typename T, typename compequalsT, typename complessT>
 std::ostream& operator<<(std::ostream &os, const bstree<T,compequalsT, complessT> &tree) {
 		typename bstree<T, compequalsT, complessT>::const_iterator i, ie;
+
+		if(tree.get_size() == 0){
+			os << "Empty Tree" << std::endl;
+			return os;
+		}
 
 		for(i = tree.begin(), ie = tree.end() ; i != ie; ++i){
 			os << *i << std::endl;
