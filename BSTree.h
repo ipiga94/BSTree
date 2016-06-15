@@ -72,7 +72,11 @@ class bstree{
 		/**
 			Destructor
 		*/
-		~node() {}
+		~node() {
+			father = 0;
+			delete left;
+			delete right;
+		}
 
 		/**
 			Copy constructor	
@@ -184,38 +188,9 @@ class bstree{
 		Method to empty the bstree
 	*/
 	void clear() {
-		node *n = _root;
-		node *temp = 0;
-
-		while(n != 0){
-			if(n->left != 0){
-				//std::cout << "left" << std::endl;
-				n = n->left;
-			}else if(n->right != 0){
-				//std::cout << "right" << std::endl;
-				n = n->right;
-			}else if(n->left == 0 && n->right == 0){
-				//std::cout << "to delete" << std::endl;
-				if(n->father == 0){	
-				//limit case when n points to the root				
-					delete n; 					
-					n = 0;
-				}else{
-					temp = n->father;
-					if(temp->left == n){
-						temp->left = 0;
-					}else{
-						temp->right = 0;
-					}
-
-					delete n;
-					n = temp;
-				}
-				
-			}
-		}
-
-		//_root = 0;
+		delete _root;
+		_root = 0;
+		_size = 0;
 	}
 
 	/**
@@ -234,7 +209,7 @@ class bstree{
 			}
 		}
 		catch(...) {
-			//clear();
+			 clear();
 			throw;
 		}
 	}
@@ -268,6 +243,12 @@ class bstree{
 		return (n != 0);
 	}
 
+	/**
+		Add a new node with the given value
+
+		@param val
+		@throw duplicated_value
+	*/
 	void add(const T &val){
 		if(_size == 0){
 			//node new_node(val);
@@ -307,7 +288,12 @@ class bstree{
 		}
 	}
 
+	/**
+		Delete the node with the given value
 
+		@param val
+		@throw non_existent_value
+	*/
 	void delete_node(const T &val){
 		if(check(val)){
 			node *d = find_helper(val); 
@@ -317,7 +303,7 @@ class bstree{
 				}else if(d->father != 0 && d->father->right == d){
 					d->father->right = 0;
 				}
-				d->value = 0;
+
 				delete d;
 				std::cout << "deleted node: " << d << " value: " << d->value << std::endl;			
 			}
@@ -335,8 +321,8 @@ class bstree{
 					d->right->father = d->father;
 				}
 
-				d->value = 0;
 				d->right = 0;
+				d->father = 0;
 				delete d;			
 			}
 			else if(d->left != 0 && d->right == 0){
@@ -354,8 +340,8 @@ class bstree{
 					d->left->father = d->father;
 				}
 
-				d->value = 0;
 				d->left = 0;
+				d->father = 0;
 				delete d;
 				std::cout << "deleted node: " << d << " value: " << d->value << std::endl;			
 			}
@@ -369,9 +355,9 @@ class bstree{
 					succ->father->right = succ->right;
 					succ->right->father = succ->father;
 				}
-				succ->value = 0;
 				succ->left = 0;
 				succ->right = 0;
+				succ->father = 0;
 				delete succ;
 				std::cout << "deleted node: " << succ << " value: " << succ->value << std::endl;
 			}
@@ -381,25 +367,47 @@ class bstree{
 		
 	}
 
+	/**
+		Check if the node with the given value is a node leaf, that is a node with no children
+
+		@param val
+		@throw non_existent_value
+	*/
 	bool is_leaf(const T &val) const{
 		node *temp = find_helper(val);
-		if(temp->right == 0 && temp->left == 0){
-			return 1;
+		if(temp != 0){
+			if(temp->right == 0 && temp->left == 0){
+				return 1;
+			}
+			return 0;
+		}else{
+			throw non_existent_value("The value inserted is not valid because it doesn't exist");
 		}
-		return 0;
 	}
 
+	/**
+		Check if the node with the given value is part of the subtree with root the given subroot
+
+		@param subroot_value
+		@param val
+		@throw non_existent_value
+	*/
 	bool is_in_subtree(const T &subroot_value, const T &val) const{
+		complessT comp_l;
+		compequalsT comp_e;
 		node *subroot = find_helper(subroot_value);
+		if(subroot == 0){
+			throw non_existent_value("The value inserted is not valid because it doesn't exist");
+		}
 		node * min = min_value(subroot);
 		node * max = max_value(subroot);
 		T min_val = min->value;
 		std::cout << "min: " << min_val << std::endl;
 		T max_val = max->value;
 		std::cout << "max: " << max_val << std::endl;
-			if(val > subroot_value && val <= max_val){
+			if((!comp_l(val, subroot_value) && !comp_e(val, subroot_value)) && (comp_l(val, max_val) || comp_e(val, max_val))){
 				return 1;
-			}else if(val < subroot_value && val >= min_val){
+			}else if(comp_l(val, subroot_value) &&  (!comp_l(val, min_val) || comp_e(val, min_val))){
 				return 1;
 			}else{
 				return 0;
@@ -574,9 +582,11 @@ class bstree{
 
 /**
 	Extract the subtree from the given tree from the node with the given value
+
 	@param t the tree to extract from
 	@param val the starting value
 	@return the extracted subtree
+	@throw non_existent_value
 */
 template <typename T, typename compequalsT, typename complessT>
 bstree<T,compequalsT, complessT> subtree(const bstree<T,compequalsT, complessT> &t,const T &val){
@@ -597,7 +607,7 @@ bstree<T,compequalsT, complessT> subtree(const bstree<T,compequalsT, complessT> 
 
  			if(!t.is_leaf(subroot_value)){
 	 			++i;
-	 			
+
 	 			bool exit = 0;
 				do{
 					if(t.is_in_subtree(subroot_value, *i)){

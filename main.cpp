@@ -40,7 +40,7 @@ void test_1(){
 
 
 
-	 std::cout << sapo_tree.get_size() << std::endl;
+	 std::cout << "size: " << sapo_tree.get_size() << std::endl;
 
 	 std::cout << sapo_tree << std::endl;
 	 sapo_tree.delete_node(3);
@@ -49,10 +49,26 @@ void test_1(){
 	 sapo_tree.check(3);
 	 std::cout << sapo_tree << std::endl;
 
+	 //-------------------------------------------------------
+
 	 bstree<int, compare_int_e, compare_int_l> sub;
 	 sub = subtree(sapo_tree, 4);
 
-	 std::cout << "subtree: " << std::endl << sub << std::endl;
+	 std::cout << "subtree 4: " << std::endl << sub << std::endl;
+
+	 sub = subtree(sapo_tree, -1);
+
+	 std::cout << "subtree -1: " << std::endl << sub << std::endl;
+
+	 sub = subtree(sapo_tree, 5);
+
+	 std::cout << "subtree 5: " << std::endl << sub << std::endl;
+
+	 sub = subtree(sapo_tree, 15);
+
+	 std::cout << "subtree 15: " << std::endl << sub << std::endl;
+
+	 //----------------------------------------------------------
 
 	 bstree<int, compare_int_e, compare_int_l> badass_tree;
 
@@ -83,6 +99,16 @@ void test_1(){
 	 badass2_tree.delete_node(3);
 
 	 std::cout << "badass2" << std::endl << badass2_tree << std::endl;
+
+	 //clear
+
+	 sapo_tree.clear();
+
+	 std::cout << "after clear: " << std::endl << sapo_tree << std::endl;
+
+	 std::cout << sapo_tree.check(4) << std::endl;
+
+	 std::cout << sapo_tree.get_size();
 
 
 
