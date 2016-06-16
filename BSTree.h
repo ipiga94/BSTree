@@ -304,6 +304,7 @@ class bstree{
 					d->father->right = 0;
 				}
 
+				d->father = 0;
 				delete d;
 				std::cout << "deleted node: " << d << " value: " << d->value << std::endl;			
 			}
@@ -346,14 +347,24 @@ class bstree{
 				std::cout << "deleted node: " << d << " value: " << d->value << std::endl;			
 			}
 			else{
+
 				node* succ = successor(d);
+
 				d->value = succ->value;
+
 				if(succ->father->left == succ){
 					succ->father->left = succ->right;
-					succ->right->father = succ->father;
+					if(succ->right != 0){
+						succ->right->father = succ->father;
+					}
+
 				}else{
+
 					succ->father->right = succ->right;
-					succ->right->father = succ->father;
+					std::cout << "qui entro " << std::endl;
+					if(succ->right != 0){
+						succ->right->father = succ->father;
+					}
 				}
 				succ->left = 0;
 				succ->right = 0;

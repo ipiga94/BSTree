@@ -209,10 +209,15 @@ void test_2(){
 	deletion_tree.add(35);
 	deletion_tree.add(37);
 
+	std::cout << "try delete" << std::endl;
+
 	deletion_tree.delete_node(30);
 
 	std::cout << "after deletion of (30) from deletion_tree " << std::endl << deletion_tree;
 
+	std::cout << "another tree: " << std::endl << another_tree << std::endl;
+
+	another_tree.delete_node(8);
 	another_tree.delete_node(12);
 
 	std::cout << "after deletion of (12) from another_tree" << std::endl << another_tree;
@@ -272,7 +277,7 @@ void test_2(){
 
 int main(){
     test_1();
-    //test_2();
+    test_2();
 
 	return 0;
 }
