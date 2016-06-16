@@ -14,6 +14,59 @@ struct compare_int_l {
 	}
 };
 
+struct compare_string_e {
+	bool operator()(const std::string &a, const std::string &b) const {
+		return ucase(a)==ucase(b);
+	}
+
+	private:
+	std::string ucase(const std::string &str) const {
+		std::string tmp(str);
+		for(int i=0; i< tmp.size(); ++i)
+			tmp[i]=std::toupper(tmp[i]);
+	
+		return tmp;
+	}	
+};
+
+struct compare_string_l {
+	bool operator()(const std::string &a, const std::string &b) const {
+		return ucase(a) < ucase(b);
+	}
+
+	private:
+	std::string ucase(const std::string &str) const {
+		std::string tmp(str);
+		for(int i=0; i< tmp.size(); ++i)
+			tmp[i]=std::toupper(tmp[i]);
+	
+		return tmp;
+	}	
+};	
+
+/*struct compare_struct_l {
+	bool operator()(test_struct a, test_struct b) const {
+		return a.i < b.i;
+	}
+};
+
+struct compare_struct_e {
+	bool operator()(test_struct a, test_struct b) const {
+		return a.i == b.i;
+	}
+};
+
+struct test_struct{
+		int i;
+		char c;
+		double d;
+
+		test_struct(int &in, char &ch, double &dob) : i(in), c(ch), d(dob){}
+
+		~test_struct(){}
+	};*/
+
+
 
 
 void test_1(){
@@ -110,14 +163,6 @@ void test_1(){
 
 	 std::cout << sapo_tree.get_size();
 
-
-
-	 
-
-
-		
-
-
 	
 }
 
@@ -161,6 +206,8 @@ void test_2(){
 	//copy constructor of a bstree test
 	bstree<int, compare_int_e, compare_int_l> other(tree);
 	std::cout << "test of the initialization of a tree by copy" << std::endl << other;
+	other.clear();
+	std::cout << "test of the deletion of a copied tree" << std::endl << other;
 
 	//assignement of a bstree test
 	bstree<int, compare_int_e, compare_int_l> to_assign;
@@ -274,10 +321,84 @@ void test_2(){
 
 }
 
+void test_3(){
+	bstree<int, compare_int_e, compare_int_l> tree;
+
+	try{
+
+		tree.add(50);
+		tree.add(60);
+		tree.add(30);
+		tree.add(40);
+		tree.add(20);
+		tree.add(70);
+		tree.add(20);
+
+	}catch(duplicated_value &e){
+		std::cout << e.what();
+	} 
+
+	bstree<int, compare_int_e, compare_int_l> copy_tree(tree);
+
+	std::cout << copy_tree;
+
+	
+
+	bstree<std::string, compare_string_e, compare_string_l> string_tree;
+
+	string_tree.add("bbbbbbb");
+	string_tree.add("aaaa");
+	string_tree.add("chndkah");
+	string_tree.add("pluto");
+	string_tree.add("pippo");
+	
+
+	std::cout << "stampa di string_tree" << std::endl << string_tree << std::endl;
+
+
+	string_tree.delete_node("pluto");
+
+
+	std::cout << "stampa di string_tree dopo cancellazione di (pluto)" << std::endl << string_tree << std::endl;
+
+	string_tree.add("pluto");
+
+	std::cout << "stampa di string_tree dopo aggiunta di (pluto)" << std::endl << string_tree << std::endl;
+
+	string_tree.delete_node("aaaa");
+
+	std::cout << "stampa di string_tree dopo cancellazione di (aaaa)" << std::endl << string_tree << std::endl;
+
+	bstree<std::string, compare_string_e, compare_string_l> copy_string_tree(string_tree);
+
+	std::cout << "stampa di copy_string_tree" << std::endl << string_tree << std::endl;
+
+	copy_string_tree.clear();
+
+	string_tree.clear();
+
+	std::cout << "stampa di string_tree dopo clear" << std::endl << string_tree << std::endl;
+
+	std::cout << "stampa di copy_string_tree dopo clear" << std::endl << copy_string_tree << std::endl;
+
+	copy_string_tree.add("prova");
+
+	bstree<std::string, compare_string_e, compare_string_l>::const_iterator i, ie;
+
+	i = copy_string_tree.begin();
+	ie = copy_string_tree.end();
+
+	while(i != ie){
+		std::cout << ("itero") << std::endl;
+		++i;
+	}
+
+}
 
 int main(){
     test_1();
     test_2();
+    test_3();
 
 	return 0;
 }

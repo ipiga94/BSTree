@@ -44,27 +44,30 @@ class bstree{
 		node(const T &v) : value(v), left(0), right(0), father(0){}
 
 		/**
-			Constructor for node given its value, its left child and right child
+			Constructor for node given its value, its left child, right child and father
 		
 			@param v value of the node
 			@param l left child
 			@param r right child
+			@param f father
 		*/
-		node(node *l, const T &v, node *r) : value(v), left(l), right(r), father(0){}
+		node(node *l, const T &v, node *r, node *f) : value(v), left(l), right(r), father(f){}
 		/**
-			Constructor for node given its value and left child
+			Constructor for node given its value, left child and father
 		
 			@param v value of the node
 			@param l left child
+			@param f father
 		*/
-		node(node *l, const T &v) : value(v), left(l), right(0), father(0){}
+		node(node *l, const T &v, node *f) : value(v), left(l), right(0), father(f){}
 		/**
-			Constructor for node given its value and its righ child
+			Constructor for node given its value and its right child
 		
 			@param v value of the node
 			@param r right child
+			@param f father
 		*/
-		node(const T &v, node *r) : value(v), left(0), right(r), father(0){}
+		node(const T &v, node *r, node *f) : value(v), left(0), right(r), father(f){}
 		/**
 			Default constructor
 		*/
@@ -82,7 +85,7 @@ class bstree{
 			Copy constructor	
 			@param other node to copy
 		*/
-		node(const node &other) : value(other.value), left(other.left), right(other.right) {}
+		node(const node &other) : value(other.value), left(other.left), right(other.right), father(other.father) {}
 
 		/**
 			Assignement operator 	
@@ -93,6 +96,7 @@ class bstree{
 				value = other.value;
 				left = other.left;
 				right = other.right;
+				father = other.father;
 			}
 			return *this;
 		}
@@ -306,7 +310,7 @@ class bstree{
 
 				d->father = 0;
 				delete d;
-				std::cout << "deleted node: " << d << " value: " << d->value << std::endl;			
+				//std::cout << "deleted node: " << d << " value: " << d->value << std::endl;			
 			}
 			else if(d->left == 0 && d->right != 0){
 				if(d->father == 0){
@@ -344,7 +348,7 @@ class bstree{
 				d->left = 0;
 				d->father = 0;
 				delete d;
-				std::cout << "deleted node: " << d << " value: " << d->value << std::endl;			
+				//std::cout << "deleted node: " << d << " value: " << d->value << std::endl;			
 			}
 			else{
 
@@ -361,7 +365,6 @@ class bstree{
 				}else{
 
 					succ->father->right = succ->right;
-					std::cout << "qui entro " << std::endl;
 					if(succ->right != 0){
 						succ->right->father = succ->father;
 					}
@@ -370,7 +373,7 @@ class bstree{
 				succ->right = 0;
 				succ->father = 0;
 				delete succ;
-				std::cout << "deleted node: " << succ << " value: " << succ->value << std::endl;
+				//std::cout << "deleted node: " << succ << " value: " << succ->value << std::endl;
 			}
 		}else{
 			throw non_existent_value("The value inserted is not valid because it doesn't exist");
@@ -413,9 +416,7 @@ class bstree{
 		node * min = min_value(subroot);
 		node * max = max_value(subroot);
 		T min_val = min->value;
-		std::cout << "min: " << min_val << std::endl;
 		T max_val = max->value;
-		std::cout << "max: " << max_val << std::endl;
 			if((!comp_l(val, subroot_value) && !comp_e(val, subroot_value)) && (comp_l(val, max_val) || comp_e(val, max_val))){
 				return 1;
 			}else if(comp_l(val, subroot_value) &&  (!comp_l(val, min_val) || comp_e(val, min_val))){
@@ -497,9 +498,9 @@ class bstree{
 		Dereference through pointer
 		@return constant pointer to node
 		*/
-		/*const T* operator->() const{
+		const T* operator->() const{
 			return &(n->value);
-		}*/
+		}
 
 		/**Post-increment
 		@return the iterator to the previous node
