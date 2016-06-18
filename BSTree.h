@@ -5,7 +5,9 @@
 #include <algorithm>
 #include <iostream>
 
-
+/**
+	Definition of custom exception
+*/
 class non_existent_value : public std::runtime_error{
 public:
 	/**
@@ -16,6 +18,9 @@ public:
 	non_existent_value(const char *message) : std::runtime_error(message){}
 };
 
+/**
+	Definition of custom exception
+*/
 class duplicated_value : public std::runtime_error{
 public:
 	/**
@@ -27,14 +32,23 @@ public:
 };
 
 
+/**
+	Class which implements the Binary Search Tree.
+	The nodes of the tree contain a value whose type must be specified, as 
+	the two functor needed to understand when a value is equal to another and
+	when a value is less than another. The functors must have bool return type.
+ */
 template <typename T, typename compequalsT, typename complessT>
 class bstree{
 
+	/**
+		Struct which represents a node of the bstree.
+	*/
 	struct node{
 		T value; ///< value of the node
 		node *left; ///< pointer to the left child node of the node
 		node *right; ///< pointer to the right child node of the node
-		node *father;///< pointer to the node father or the node
+		node *father;///< pointer to the node father(the previus node) or the node
 
 		/**
 			Constructor for node given its value
@@ -103,8 +117,8 @@ class bstree{
 	};
 
 
-	node *_root;
-	int _size;
+	node *_root;///<Root of the tree
+	int _size;///<Size of the tree
 
 
 
@@ -302,7 +316,9 @@ class bstree{
 		if(check(val)){
 			node *d = find_helper(val); 
 			if(d->left == 0 && d->right == 0){
-				if(d->father != 0 && d->father->left == d){
+				if(d->father == 0){
+					_root = 0;
+				}else if(d->father != 0 && d->father->left == d){
 					d->father->left = 0;
 				}else if(d->father != 0 && d->father->right == d){
 					d->father->right = 0;
@@ -310,6 +326,7 @@ class bstree{
 
 				d->father = 0;
 				delete d;
+				_size = _size - 1;
 				//std::cout << "deleted node: " << d << " value: " << d->value << std::endl;			
 			}
 			else if(d->left == 0 && d->right != 0){
@@ -328,7 +345,8 @@ class bstree{
 
 				d->right = 0;
 				d->father = 0;
-				delete d;			
+				delete d;
+				_size = _size - 1;			
 			}
 			else if(d->left != 0 && d->right == 0){
 				if(d->father == 0){
@@ -348,6 +366,7 @@ class bstree{
 				d->left = 0;
 				d->father = 0;
 				delete d;
+				_size = _size - 1;
 				//std::cout << "deleted node: " << d << " value: " << d->value << std::endl;			
 			}
 			else{
@@ -373,6 +392,7 @@ class bstree{
 				succ->right = 0;
 				succ->father = 0;
 				delete succ;
+				_size = _size - 1;
 				//std::cout << "deleted node: " << succ << " value: " << succ->value << std::endl;
 			}
 		}else{
