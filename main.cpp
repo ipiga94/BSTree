@@ -89,7 +89,7 @@ struct compare_struct_e {
 
 //Test con T int
 void test_1(){
-	std::cout << "*** Start of test_1 with type INT ***" << std::endl;
+	std::cout << "********** Start of test_1 with type INT **********" << std::endl;
 	//instantiation of a bstree
 	bstree<int, compare_int_e, compare_int_l> tree;
 
@@ -247,7 +247,7 @@ void test_1(){
 
 //Test con T stringa
 void test_2(){
-	std::cout << "*** Start of test_2 with type STRING ***" << std::endl;
+	std::cout << "********** Start of test_2 with type STRING **********" << std::endl;
 
 	bstree<std::string, compare_string_e, compare_string_l> string_tree;
 
@@ -304,11 +304,35 @@ void test_2(){
 
 	std::cout << "print of copy_string_tree after add of element" << std::endl << copy_string_tree << std::endl;
 
+	i = copy_string_tree.begin();
+	ie = copy_string_tree.end();
+
+	bstree<std::string, compare_string_e, compare_string_l>::const_iterator copy_i(i);
+
+	std::cout << "instantiation of a new iterator by copy " << std::endl << "test of the copied iterator " << std::endl;
+
+	while(copy_i != ie){
+		std::cout << "iteration: " << *copy_i << std::endl;
+		++copy_i;
+	}
+
+	i = copy_string_tree.begin();
+	ie = copy_string_tree.end();
+
+	copy_i = ie;
+
+	std::cout << "assignement of ie to copy_i " << std::endl << "test of the assigned iterator " << std::endl;
+
+	while(i != copy_i){
+		std::cout << "iteration: " << *i << std::endl;
+		++i;
+	}
+
 }
 
 //Test con T struct
 void test_3(){
-	std::cout << "*** Start of test_3 with custom type TEST_STRUCT ***" << std::endl;
+	std::cout << "********** Start of test_3 with custom type TEST_STRUCT **********" << std::endl;
 	bstree<test_struct, compare_struct_e, compare_struct_l> struct_tree;
 
 	test_struct s(5, 'a', 0.1);
