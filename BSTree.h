@@ -1,9 +1,11 @@
+//Ilaria Pigazzini 780684
+//Programmazione e amministrazione di sistema 2016
 #ifndef BSTREE_H
 #define BSTREE_H
 
 #include <stdexcept>
 #include <algorithm>
-#include <iostream>
+
 
 /**
 	Definition of custom exception
@@ -314,22 +316,21 @@ class bstree{
 	*/
 	void delete_node(const T &val){
 		if(check(val)){
-			node *d = find_helper(val); 
-			if(d->left == 0 && d->right == 0){
-				if(d->father == 0){
+			node *d = find_helper(val);//find the pointer to the node to delete
+			if(d->left == 0 && d->right == 0){//case: the node to delete is a leaf
+				if(d->father == 0){//case: the node to delete is the root
 					_root = 0;
-				}else if(d->father != 0 && d->father->left == d){
+				}else if(d->father != 0 && d->father->left == d){//case: the node to delete is the left child of its father
 					d->father->left = 0;
-				}else if(d->father != 0 && d->father->right == d){
+				}else if(d->father != 0 && d->father->right == d){//case: the node to delete is the right child of its father
 					d->father->right = 0;
 				}
 
 				d->father = 0;
 				delete d;
-				_size = _size - 1;
-				//std::cout << "deleted node: " << d << " value: " << d->value << std::endl;			
+				_size = _size - 1;		
 			}
-			else if(d->left == 0 && d->right != 0){
+			else if(d->left == 0 && d->right != 0){//case: the node to delete has a right child
 				if(d->father == 0){
 					d->right->father = 0;
 					_root = d->right;
@@ -348,7 +349,7 @@ class bstree{
 				delete d;
 				_size = _size - 1;			
 			}
-			else if(d->left != 0 && d->right == 0){
+			else if(d->left != 0 && d->right == 0){//case: the node to delete has a left child
 				if(d->father == 0){
 					d->left->father = 0;
 					_root = d->left;
@@ -366,10 +367,9 @@ class bstree{
 				d->left = 0;
 				d->father = 0;
 				delete d;
-				_size = _size - 1;
-				//std::cout << "deleted node: " << d << " value: " << d->value << std::endl;			
+				_size = _size - 1;	
 			}
-			else{
+			else{//case: the node to delete has two child
 
 				node* succ = successor(d);
 
@@ -393,7 +393,6 @@ class bstree{
 				succ->father = 0;
 				delete succ;
 				_size = _size - 1;
-				//std::cout << "deleted node: " << succ << " value: " << succ->value << std::endl;
 			}
 		}else{
 			throw non_existent_value("The value inserted is not valid because it doesn't exist");
@@ -630,7 +629,7 @@ bstree<T,compequalsT, complessT> subtree(const bstree<T,compequalsT, complessT> 
 			i = t.begin();
 			ie = t.end();
 
-			while(*i != val){
+			while(*i != val){//find the iterator at the node root of the subtree
 				++i;
 			}
 

@@ -1,3 +1,5 @@
+//Ilaria Pigazzini 780684
+//Programmazione e amministrazione di sistema 2016
 #include <iostream>
 #include "BSTree.h"
 
@@ -85,109 +87,9 @@ struct compare_struct_e {
 
 
 
-
-
-
-void test_1(){
-
-	 bstree<int, compare_int_e, compare_int_l> sapo_tree;
-
-	 std::cout << sapo_tree;
-
-	 try{
-	 	
-	 	sapo_tree.add(3);
-	 	sapo_tree.add(4);
-	 	sapo_tree.add(5);
-	 	sapo_tree.add(-1);
-	 	sapo_tree.add(3*5);
-	 	std::cout << sapo_tree << std::endl;
-
-	 
-
-	 } catch (...) {
-
-	 	std::cout << "presa eccezione" << std::endl;
-	}
-
-
-
-	 std::cout << "size: " << sapo_tree.get_size() << std::endl;
-
-	 std::cout << sapo_tree << std::endl;
-	 sapo_tree.delete_node(3);
-	 std::cout << sapo_tree << std::endl;
-
-	 sapo_tree.check(3);
-	 std::cout << sapo_tree << std::endl;
-
-	 //-------------------------------------------------------
-
-	 bstree<int, compare_int_e, compare_int_l> sub;
-	 sub = subtree(sapo_tree, 4);
-
-	 std::cout << "subtree 4: " << std::endl << sub << std::endl;
-
-	 sub = subtree(sapo_tree, -1);
-
-	 std::cout << "subtree -1: " << std::endl << sub << std::endl;
-
-	 sub = subtree(sapo_tree, 5);
-
-	 std::cout << "subtree 5: " << std::endl << sub << std::endl;
-
-	 sub = subtree(sapo_tree, 15);
-
-	 std::cout << "subtree 15: " << std::endl << sub << std::endl;
-
-	 //----------------------------------------------------------
-
-	 bstree<int, compare_int_e, compare_int_l> badass_tree;
-
-	 std::cout << "badass" << std::endl << badass_tree << std::endl;
-
-	 badass_tree.add(3);
-	 badass_tree.add(2);
-	 badass_tree.add(1);
-
-	 std::cout << "badass" << std::endl << badass_tree << std::endl;
-
-	 badass_tree.delete_node(3);
-
-	 std::cout << "badass" << std::endl << badass_tree << std::endl;
-
-	 bstree<int, compare_int_e, compare_int_l> badass2_tree;
-
-	 std::cout << "badass2" << std::endl << badass2_tree << std::endl;
-
-	 badass2_tree.add(5);
-	 badass2_tree.add(2);
-	 badass2_tree.add(1);
-	 badass2_tree.add(3);
-	 badass2_tree.add(4);
-
-	 std::cout << "badass2" << std::endl << badass2_tree << std::endl;
-
-	 badass2_tree.delete_node(3);
-
-	 std::cout << "badass2" << std::endl << badass2_tree << std::endl;
-
-	 //clear
-
-	 sapo_tree.clear();
-
-	 std::cout << "after clear: " << std::endl << sapo_tree << std::endl;
-
-	 std::cout << sapo_tree.check(4) << std::endl;
-
-	 std::cout << sapo_tree.get_size();
-
-	
-}
-
 //Test con T int
-void test_2(){
-	std::cout << "*** Start of test_2 with type INT ***" << std::endl;
+void test_1(){
+	std::cout << "*** Start of test_1 with type INT ***" << std::endl;
 	//instantiation of a bstree
 	bstree<int, compare_int_e, compare_int_l> tree;
 
@@ -228,9 +130,9 @@ void test_2(){
 
 	//copy constructor of a bstree test
 	bstree<int, compare_int_e, compare_int_l> other(tree);
-	std::cout << "test of the initialization of a tree by copy" << std::endl << other;
+	std::cout << "test of the initialization of a tree by copy" << std::endl << "print of the copied tree" << other;
 	other.clear();
-	std::cout << "test of the deletion of a copied tree" << std::endl << other;
+	std::cout << "test of the clear of the copied tree" << std::endl << other;
 
 	//assignement of a bstree test
 	bstree<int, compare_int_e, compare_int_l> to_assign;
@@ -243,59 +145,45 @@ void test_2(){
 
 	tree = to_assign;
 
-	std::cout << "test the assignement of to_assign to the previous tree" << std::endl << tree;
+	std::cout << "test the assignement of to_assign to the previous tree" << std::endl << "print of the assigned tree" << tree;
 
-	//delete a node leaf of the bstree test
-	to_assign.delete_node(7);
-
-
-	std::cout << "test of the deletion of value (7)" << std::endl << to_assign;
-
-	//test of get minimum
-	bstree<int, compare_int_e, compare_int_l> another_tree;
-
-	another_tree.add(10);
-	another_tree.add(8);
-	another_tree.add(9);
-	another_tree.add(7);
-	another_tree.add(12);
-	another_tree.add(13);
-	another_tree.add(11);
-
-	std::cout << "another tree instantiation" << std::endl << another_tree;
+	
 
 	//test deletion
 
 	bstree<int, compare_int_e, compare_int_l> deletion_tree;
 
+	deletion_tree.add(10);
+	deletion_tree.add(3);
+	deletion_tree.add(6);
+	deletion_tree.add(11);
+	deletion_tree.add(12);
+	deletion_tree.add(2);
+	deletion_tree.add(13);
 	deletion_tree.add(50);
-	deletion_tree.add(30);
-	deletion_tree.add(40);
-	deletion_tree.add(60);
-	deletion_tree.add(70);
-	deletion_tree.add(20);
-	deletion_tree.add(90);
-	deletion_tree.add(550);
-	deletion_tree.add(35);
-	deletion_tree.add(37);
+	deletion_tree.add(4);
+	deletion_tree.add(5);
 
-	std::cout << "try delete" << std::endl;
+	std::cout << "print of new tree deletion_tree " << std::endl << deletion_tree;
 
-	deletion_tree.delete_node(30);
+	std::cout << "test of delete_node" << std::endl;
 
-	std::cout << "after deletion of (30) from deletion_tree " << std::endl << deletion_tree;
+	deletion_tree.delete_node(3);
 
-	std::cout << "another tree: " << std::endl << another_tree << std::endl;
+	std::cout << "after deletion of (3) from deletion_tree " << std::endl << deletion_tree;
 
-	another_tree.delete_node(8);
-	another_tree.delete_node(12);
+	deletion_tree.delete_node(10);
 
-	std::cout << "after deletion of (12) from another_tree" << std::endl << another_tree;
+	std::cout << "after deletion of (10) from deletion_tree " << std::endl << deletion_tree;
+
+	deletion_tree.delete_node(5);
+
+	std::cout << "after deletion of (5) from deletion_tree " << std::endl << deletion_tree;
 
 	//test of clear bstree
-	//delete &another_tree;
+	deletion_tree.clear();
 
-	std::cout << "after clear of another_tree" << std::endl << another_tree;
+	std::cout << "after clear of deletion_tree" << std::endl << deletion_tree;
 
 	std::cout << "test of subtree" << std::endl;
 	//test of subtree
@@ -345,16 +233,21 @@ void test_2(){
 	}
 	
 	//test of is_leaf
-	std::cout << "(9) is leaf? " << another_tree.is_leaf(9) << std::endl;
-	std::cout << "(10) is leaf? " << another_tree.is_leaf(10) << std::endl;
+	std::cout << "(9) is leaf? " << subtree_test.is_leaf(16) << std::endl;
+	std::cout << "(10) is leaf? " << subtree_test.is_leaf(10) << std::endl;
+
+	//test of is_in_subtree
+	std::cout << "(10) is in subtree with root (12)? " << subtree_test.is_in_subtree(12, 10) << std::endl;
+	std::cout << "(13) is in subtree with root (12)? " << subtree_test.is_in_subtree(12, 13) << std::endl;
+
 
 
 }
 
 
 //Test con T stringa
-void test_3(){
-	std::cout << "*** Start of test_3 with type STRING ***" << std::endl;
+void test_2(){
+	std::cout << "*** Start of test_2 with type STRING ***" << std::endl;
 
 	bstree<std::string, compare_string_e, compare_string_l> string_tree;
 
@@ -393,7 +286,11 @@ void test_3(){
 
 	std::cout << "print of copy_string_tree after clear" << std::endl << copy_string_tree << std::endl;
 
-	copy_string_tree.add("prova");
+	copy_string_tree.add("mickey mouse");
+
+	std::cout << "print of copy_string_tree after add of element" << std::endl << copy_string_tree << std::endl;
+
+	std::cout << "mickey mouse is leaf? " << copy_string_tree.is_leaf("mickey mouse") << std::endl;
 
 	bstree<std::string, compare_string_e, compare_string_l>::const_iterator i, ie;
 
@@ -405,11 +302,13 @@ void test_3(){
 		++i;
 	}
 
+	std::cout << "print of copy_string_tree after add of element" << std::endl << copy_string_tree << std::endl;
+
 }
 
 //Test con T struct
-void test_4(){
-	std::cout << "*** Start of test_4 with custom type TEST_STRUCT ***" << std::endl;
+void test_3(){
+	std::cout << "*** Start of test_3 with custom type TEST_STRUCT ***" << std::endl;
 	bstree<test_struct, compare_struct_e, compare_struct_l> struct_tree;
 
 	test_struct s(5, 'a', 0.1);
@@ -423,7 +322,6 @@ void test_4(){
 	std::cout << "check of s" << std::endl << struct_tree.check(s) << std::endl;
 
 	struct_tree.delete_node(s);
-	//struct_tree.clear();
 
 	std::cout << "print of struct_tree " << std::endl << struct_tree << std::endl;
 
@@ -456,10 +354,10 @@ void test_4(){
 
 
 int main(){
+
     test_1();
     test_2();
     test_3();
-    test_4();
 
 	return 0;
 }
